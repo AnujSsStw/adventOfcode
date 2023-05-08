@@ -1,37 +1,41 @@
 import { log } from "node:console";
 import { open } from "node:fs/promises";
+import internal from "node:stream";
 
 (async () => {
   const file = await open("./text.txt");
   let ts = 0;
 
   console.time("time");
-  const arr = [];
   for await (const line of file.readLines()) {
-    if (arr.length < 3) {
-      arr.push(line);
-    } else {
-      arr.length = 0;
-      arr.push(line);
-    }
+    const pair = line.split(",");
+    const p1 = pair[0].split("-");
+    const p2 = pair[1].split("-");
 
-    if (arr.length == 3) {
-      const ch = matchInMore(arr)[0];
-      // Using for loop for (a-z): 97-122 (A-Z): 65-90
-      let a = ch.charCodeAt(0);
-      if (ch >= "a" && ch <= "z") {
-        const realC = a - 96;
-        ts = ts + realC;
-      } else {
-        const realC = a - 38;
-        ts = ts + realC;
-      }
+    let fullyC1: number[] = [];
+    buildA(p1, fullyC1);
+    let fullyC2: number[] = [];
+    buildA(p2, fullyC2);
+
+    log("first: ", fullyC1, "sendo: ", fullyC2);
+
+    let isFounded = fullyC1.every((ai) => fullyC2.includes(ai));
+    let isFounded2 = fullyC2.every((ai) => fullyC1.includes(ai));
+
+    if (isFounded || isFounded2) {
+      ts = ts + 1;
     }
-    // const ch = match(p1, p2);
   }
+
   console.timeEnd("time");
   console.log(ts);
 })();
+
+function buildA(p1: string[], fullyC: number[]) {
+  for (let i = parseInt(p1[0]); i <= parseInt(p1[1]); i++) {
+    fullyC.push(i);
+  }
+}
 
 function match(s1: string[], s2: string) {
   let count: string = "";
