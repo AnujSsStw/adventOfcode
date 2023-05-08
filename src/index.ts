@@ -17,10 +17,8 @@ import internal from "node:stream";
     let fullyC2: number[] = [];
     buildA(p2, fullyC2);
 
-    log("first: ", fullyC1, "sendo: ", fullyC2);
-
-    let isFounded = fullyC1.every((ai) => fullyC2.includes(ai));
-    let isFounded2 = fullyC2.every((ai) => fullyC1.includes(ai));
+    let isFounded = fullyC1.some((ai) => fullyC2.includes(ai));
+    let isFounded2 = fullyC2.some((ai) => fullyC1.includes(ai));
 
     if (isFounded || isFounded2) {
       ts = ts + 1;
