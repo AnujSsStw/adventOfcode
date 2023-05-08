@@ -6,24 +6,44 @@ import internal from "node:stream";
   const file = await open("./text.txt");
   let ts = 0;
 
+  const arr = [
+    ["W", "D", "G", "B", "H", "R", "V"],
+    ["J", "N", "G", "C", "R", "F"],
+    ["L", "S", "F", "H", "D", "N", "J"],
+    ["J", "D", "S", "V"],
+    ["S", "H", "D", "R", "Q", "W", "N", "V"],
+    ["P", "G", "H", "C", "M"],
+    ["F", "J", "B", "G", "L", "Z", "H", "C"],
+    ["S", "J", "R"],
+    ["L", "G", "S", "R", "B", "N", "V", "M"],
+  ];
+
   console.time("time");
   for await (const line of file.readLines()) {
-    const pair = line.split(",");
-    const p1 = pair[0].split("-");
-    const p2 = pair[1].split("-");
+    const sp = line.split(" ");
+    const moves = sp.filter((val) =>
+      !Number.isNaN(parseInt(val)) ? val : false
+    );
 
-    let fullyC1: number[] = [];
-    buildA(p1, fullyC1);
-    let fullyC2: number[] = [];
-    buildA(p2, fullyC2);
+    const amount = parseInt(moves[0]);
+    const form = parseInt(moves[1]) - 1; //remove
+    const to = parseInt(moves[2]) - 1; //add
 
-    let isFounded = fullyC1.some((ai) => fullyC2.includes(ai));
-    let isFounded2 = fullyC2.some((ai) => fullyC1.includes(ai));
-
-    if (isFounded || isFounded2) {
-      ts = ts + 1;
+    const removeItem: any = [];
+    for (let i = 0; i < amount; i++) {
+      removeItem.push(arr[form].pop());
     }
+
+    removeItem.forEach((val: string) => {
+      arr[to].push(val);
+    });
   }
+  log(arr);
+  let s = "";
+  arr.forEach((subArr) => {
+    s += subArr.pop();
+  });
+  log(s);
 
   console.timeEnd("time");
   console.log(ts);
