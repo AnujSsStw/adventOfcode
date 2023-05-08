@@ -29,11 +29,12 @@ import internal from "node:stream";
     const form = parseInt(moves[1]) - 1; //remove
     const to = parseInt(moves[2]) - 1; //add
 
-    const removeItem: any = [];
+    let removeItem: any = [];
+    const goingToRev = [];
     for (let i = 0; i < amount; i++) {
-      removeItem.push(arr[form].pop());
+      goingToRev.push(arr[form].pop());
     }
-
+    removeItem = goingToRev.reverse();
     removeItem.forEach((val: string) => {
       arr[to].push(val);
     });
